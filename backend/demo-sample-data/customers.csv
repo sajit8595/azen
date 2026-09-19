@@ -1,0 +1,6 @@
+customer_id,first_name,last_name,gender,date_of_birth,email,phone_number,city,state,country,occupation,annual_income,customer_segment,kyc_status,risk_rating,is_politically_exposed,customer_since
+DEMO_CUST_BEHAVIOR,Maya,Kapoor,F,1988-04-12,maya.kapoor@example.test,+91-9000000101,Mumbai,Maharashtra,IN,Consultant,1200000,PREMIUM,VERIFIED,MEDIUM,0,2020-01-15
+DEMO_CUST_STRUCT,Rohan,Mehta,M,1982-09-23,rohan.mehta@example.test,+91-9000000102,Delhi,Delhi,IN,Retailer,900000,BUSINESS,VERIFIED,HIGH,0,2018-06-10
+DEMO_CUST_RAPID,Sara,Iyer,F,1991-01-08,sara.iyer@example.test,+91-9000000103,Bengaluru,Karnataka,IN,Designer,750000,RETAIL,VERIFIED,MEDIUM,0,2021-03-20
+DEMO_CUST_RISK,Arjun,Patel,M,1979-11-30,arjun.patel@example.test,+91-9000000104,Ahmedabad,Gujarat,IN,Exporter,1800000,BUSINESS,VERIFIED,HIGH,1,2016-08-05
+DEMO_CUST_CTR,Neha,Das,F,1985-07-19,neha.das@example.test,+91-9000000105,Kolkata,West Bengal,IN,Architect,1100000,PREMIUM,VERIFIED,LOW,0,2019-12-01
