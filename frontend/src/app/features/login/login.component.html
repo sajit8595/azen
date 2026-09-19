@@ -1,0 +1,38 @@
+<div class="d-flex align-items-center justify-content-center min-vh-100 p-3">
+  <div class="card shadow-lg border-0 w-100" style="max-width: 400px">
+    <div class="card-body p-4">
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <span class="fs-2 text-accent">◈</span>
+        <div>
+          <h1 class="h4 mb-0 text-primary">Sentinel AML</h1>
+          <p class="text-secondary small mb-0">MeridianTrust Transaction Monitoring</p>
+        </div>
+      </div>
+
+      <form (ngSubmit)="submit()">
+        <div class="mb-3">
+          <label for="u" class="form-label">Username</label>
+          <input id="u" name="username" class="form-control" [(ngModel)]="username"
+                 autocomplete="username" required />
+        </div>
+        <div class="mb-3">
+          <label for="p" class="form-label">Password</label>
+          <input id="p" name="password" type="password" class="form-control" [(ngModel)]="password"
+                 autocomplete="current-password" required />
+        </div>
+
+        @if (error()) {
+          <div class="alert alert-danger py-2">{{ error() }}</div>
+        }
+
+        <button class="btn btn-primary w-100" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Signing in…' : 'Sign in' }}
+        </button>
+      </form>
+
+      <div class="text-secondary small text-center mt-3">
+        Demo: <code>analyst / analyst123</code> · <code>admin / admin123</code>
+      </div>
+    </div>
+  </div>
+</div>

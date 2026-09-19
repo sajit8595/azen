@@ -1,0 +1,88 @@
+<div class="mb-3">
+  <a routerLink="/cases" class="text-decoration-none small"><i class="bi bi-arrow-left"></i> Back to cases</a>
+</div>
+
+@if (loading()) {
+  <p class="text-secondary">Loading case…</p>
+} @else if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+} @else if (case(); as c) {
+  <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+    <h1 class="h3 mb-0 text-primary">Case #{{ c.id }}</h1>
+    <span class="badge fs-6" [class]="statBadge(c.status)">{{ label(c.status) }}</span>
+    @if (c.disposition) {
+      <span class="badge fs-6" [class]="dispBadge(c.disposition)">{{ label(c.disposition) }}</span>
+    }
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-5">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Case Details</h2>
+          <dl class="row mb-0 small">
+            <dt class="col-5 text-secondary">Linked alert</dt>
+            <dd class="col-7"><a [routerLink]="['/alerts', c.alertId]">#{{ c.alertId }}</a></dd>
+            <dt class="col-5 text-secondary">Assigned to</dt>
+            <dd class="col-7">{{ c.assignedTo || '—' }}</dd>
+            <dt class="col-5 text-secondary">Analyst</dt>
+            <dd class="col-7">{{ c.analystId || '—' }}</dd>
+            <dt class="col-5 text-secondary">Created</dt>
+            <dd class="col-7">{{ c.createdAt | date: 'medium' }}</dd>
+            <dt class="col-5 text-secondary">Updated</dt>
+            <dd class="col-7">{{ c.updatedAt | date: 'medium' }}</dd>
+          </dl>
+
+          @if (c.dispositionReason) {
+            <hr />
+            <h3 class="h6">Disposition reason</h3>
+            <p class="mb-0 small">{{ c.dispositionReason }}</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-7">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Disposition</h2>
+
+          @if (isDisposed) {
+            <div class="alert alert-secondary mb-0">
+              This case is disposed as
+              <span class="badge" [class]="dispBadge(c.disposition)">{{ label(c.disposition) }}</span>.
+            </div>
+          } @else {
+            <form (ngSubmit)="submit()">
+              <div class="mb-3">
+                <label for="disp" class="form-label">Disposition</label>
+                <select id="disp" class="form-select" [(ngModel)]="disposition" name="disposition" required>
+                  <option value="" disabled>Select…</option>
+                  <option value="CONFIRMED_SAR">Confirmed SAR</option>
+                  <option value="FALSE_POSITIVE">False Positive</option>
+                  <option value="CLEARED">Cleared</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="reason" class="form-label">Reason <span class="text-danger">*</span></label>
+                <textarea id="reason" class="form-control" rows="4" [(ngModel)]="reason" name="reason"
+                          placeholder="Explain the disposition decision…" required></textarea>
+              </div>
+
+              @if (saveError()) {
+                <div class="alert alert-danger py-2">{{ saveError() }}</div>
+              }
+              @if (saved()) {
+                <div class="alert alert-success py-2">Disposition saved and recorded in the audit trail.</div>
+              }
+
+              <button class="btn btn-primary" type="submit" [disabled]="saving()">
+                {{ saving() ? 'Saving…' : 'Submit Disposition' }}
+              </button>
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

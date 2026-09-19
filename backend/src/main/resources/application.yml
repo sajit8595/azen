@@ -1,0 +1,68 @@
+spring:
+  application:
+    name: sentinel-aml
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+# Application-specific config
+sentinel:
+  security:
+    jwt-secret: ${JWT_SECRET:change-me-in-prod-this-is-a-dev-only-secret-key-256bits-long!!}
+    jwt-expiration-ms: 3600000
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:4200}
+
+logging:
+  level:
+    com.meridiantrust.sentinel: INFO
+
+---
+# ---------- DEV profile: H2 in PostgreSQL compatibility mode (zero setup) ----------
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:sentinel;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  flyway:
+    locations: classpath:db/migration,classpath:db/dev
+
+---
+# ---------- POSTGRES profile ----------
+spring:
+  config:
+    activate:
+      on-profile: postgres
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/sentinel_aml}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:aj1singh}
+    password: ${DB_PASSWORD:}
+  flyway:
+    locations: classpath:db/migration,classpath:db/dev

@@ -1,0 +1,93 @@
+<div class="d-flex align-items-end justify-content-between mb-4">
+  <div>
+    <h1 class="h3 mb-1 text-primary">Dashboard</h1>
+    <p class="text-secondary mb-0">Real-time AML monitoring overview</p>
+  </div>
+  <button class="btn btn-outline-secondary btn-sm" (click)="load()" [disabled]="loading()">
+    <i class="bi bi-arrow-clockwise"></i> Refresh
+  </button>
+</div>
+
+@if (loading()) {
+  <p class="text-secondary">Loading metrics…</p>
+} @else if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+} @else if (stats()) {
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+      <a class="card border-0 shadow-sm text-decoration-none border-start border-4 border-warning h-100"
+         routerLink="/alerts" [queryParams]="{ status: 'OPEN' }">
+        <div class="card-body">
+          <div class="fs-2 fw-bold text-body">{{ stats()!.open }}</div>
+          <div class="text-secondary small">Open Alerts</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-lg-3">
+      <a class="card border-0 shadow-sm text-decoration-none border-start border-4 border-primary h-100"
+         routerLink="/alerts" [queryParams]="{ status: 'IN_REVIEW' }">
+        <div class="card-body">
+          <div class="fs-2 fw-bold text-body">{{ stats()!.inReview }}</div>
+          <div class="text-secondary small">In Review</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-lg-3">
+      <a class="card border-0 shadow-sm text-decoration-none border-start border-4 border-secondary h-100"
+         routerLink="/alerts" [queryParams]="{ status: 'CLOSED' }">
+        <div class="card-body">
+          <div class="fs-2 fw-bold text-body">{{ stats()!.closed }}</div>
+          <div class="text-secondary small">Closed</div>
+        </div>
+      </a>
+    </div>
+    <div class="col-6 col-lg-3">
+      <div class="card border-0 shadow-sm border-start border-4 border-info h-100">
+        <div class="card-body">
+          <div class="fs-2 fw-bold text-body">{{ total() }}</div>
+          <div class="text-secondary small">Total Alerts</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Alerts by Severity</h2>
+          @for (b of severityBars(); track b.key) {
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="badge" [class]="sevBadge(b.key)" style="width: 90px">{{ b.key }}</span>
+              <div class="progress flex-grow-1" role="progressbar">
+                <div class="progress-bar" [class]="severityColor(b.key)" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="font-monospace text-end" style="width: 40px">{{ b.value }}</span>
+            </div>
+          } @empty {
+            <p class="text-secondary mb-0">No data.</p>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Alerts by Rule</h2>
+          @for (b of ruleBars(); track b.key) {
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <span class="font-monospace small text-secondary text-truncate" style="width: 130px">{{ b.key }}</span>
+              <div class="progress flex-grow-1" role="progressbar">
+                <div class="progress-bar bg-primary" [style.width.%]="b.pct"></div>
+              </div>
+              <span class="font-monospace text-end" style="width: 40px">{{ b.value }}</span>
+            </div>
+          } @empty {
+            <p class="text-secondary mb-0">No data.</p>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+}

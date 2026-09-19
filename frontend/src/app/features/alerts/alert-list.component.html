@@ -1,0 +1,95 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1 text-primary">Alert Queue</h1>
+  <p class="text-secondary mb-0">Sorted by risk score, highest first</p>
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+  <div class="card-body d-flex flex-wrap align-items-end gap-3">
+    <div>
+      <label for="status" class="form-label small mb-1">Status</label>
+      <select id="status" class="form-select form-select-sm" [(ngModel)]="status" (ngModelChange)="reload()">
+        <option value="">All</option>
+        <option value="OPEN">Open</option>
+        <option value="IN_REVIEW">In Review</option>
+        <option value="CLOSED">Closed</option>
+      </select>
+    </div>
+    <div>
+      <label for="min" class="form-label small mb-1">Min Risk Score</label>
+      <input id="min" type="number" min="0" max="100" class="form-control form-control-sm"
+             [(ngModel)]="minRiskScore" (change)="reload()" />
+    </div>
+    <div>
+      <label for="sort" class="form-label small mb-1">Sort</label>
+      <select id="sort" class="form-select form-select-sm" [(ngModel)]="sort" (ngModelChange)="reload()">
+        <option value="riskScore,desc">Risk ↓</option>
+        <option value="riskScore,asc">Risk ↑</option>
+        <option value="createdAt,desc">Newest</option>
+        <option value="createdAt,asc">Oldest</option>
+      </select>
+    </div>
+    <div class="ms-auto">
+      <button class="btn btn-outline-secondary btn-sm" (click)="reload()" [disabled]="loading()">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (loading()) {
+  <p class="text-secondary">Loading alerts…</p>
+} @else if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+} @else {
+  <div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Score</th>
+            <th>Severity</th>
+            <th>Rule</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (a of page()?.content ?? []; track a.id) {
+            <tr>
+              <td><span class="fw-bold">{{ a.riskScore }}</span></td>
+              <td><span class="badge" [class]="sevBadge(a.severity)">{{ a.severity }}</span></td>
+              <td>
+                <div>{{ a.ruleName }}</div>
+                <div class="text-secondary font-monospace small">{{ a.ruleCode }}</div>
+              </td>
+              <td class="font-monospace">{{ a.customerId }}</td>
+              <td><span class="badge" [class]="statBadge(a.status)">{{ label(a.status) }}</span></td>
+              <td class="text-secondary">{{ a.createdAt | date: 'short' }}</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" [routerLink]="['/alerts', a.id]">View</a>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="text-center text-secondary py-4">
+                No alerts match the current filters.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  @if (page(); as p) {
+    <div class="d-flex align-items-center justify-content-center gap-3 mt-3">
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="p.first" (click)="go(p.number - 1)">Prev</button>
+      <span class="text-secondary small">
+        Page {{ p.number + 1 }} of {{ p.totalPages || 1 }} · {{ p.totalElements }} alerts
+      </span>
+      <button class="btn btn-outline-secondary btn-sm" [disabled]="p.last" (click)="go(p.number + 1)">Next</button>
+    </div>
+  }
+}

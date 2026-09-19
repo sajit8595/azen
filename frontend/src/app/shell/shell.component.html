@@ -1,0 +1,60 @@
+<div class="d-flex min-vh-100">
+  <aside class="brand-sidebar d-flex flex-column flex-shrink-0 p-3" style="width: 240px">
+    <div class="d-flex align-items-center gap-2 mb-4 px-1 text-white">
+      <span class="fs-4 text-accent">◈</span>
+      <span class="fw-bold">Sentinel AML</span>
+    </div>
+
+    <ul class="nav nav-pills flex-column gap-1 mb-auto">
+      <li class="nav-item">
+        <a routerLink="/dashboard" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+          <i class="bi bi-grid-1x2"></i> Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/ingest" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+          <i class="bi bi-cloud-upload"></i> Data Ingestion
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/alerts" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+          <i class="bi bi-exclamation-triangle"></i> Alerts
+        </a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="/cases" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+          <i class="bi bi-folder2"></i> Cases
+        </a>
+      </li>
+      @if (auth.isAdmin()) {
+        <li class="nav-item">
+          <a routerLink="/admin/rules" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+            <i class="bi bi-sliders"></i> Rule Config
+          </a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/admin/audit" routerLinkActive="active" class="nav-link d-flex align-items-center gap-2">
+            <i class="bi bi-journal-text"></i> Audit Trail
+          </a>
+        </li>
+      }
+    </ul>
+
+    <hr class="text-white-50" />
+    <div class="d-flex align-items-center gap-2 mb-2 text-white">
+      <div class="rounded-circle bg-accent text-white d-flex align-items-center justify-content-center text-uppercase fw-bold"
+           style="width: 34px; height: 34px">{{ initial() }}</div>
+      <div>
+        <div class="small fw-semibold">{{ auth.username() }}</div>
+        <div class="text-white-50" style="font-size: 0.72rem">{{ auth.role() }}</div>
+      </div>
+    </div>
+    <button class="btn btn-outline-light btn-sm w-100" (click)="logout()">
+      <i class="bi bi-box-arrow-right"></i> Sign out
+    </button>
+  </aside>
+
+  <main class="flex-grow-1 p-4" style="max-width: 1400px">
+    <router-outlet />
+  </main>
+</div>

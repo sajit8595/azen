@@ -1,0 +1,72 @@
+<div class="mb-4">
+  <h1 class="h3 mb-1 text-primary">Cases</h1>
+  <p class="text-secondary mb-0">Investigations opened from alerts</p>
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+  <div class="card-body d-flex align-items-end gap-3">
+    <div>
+      <label for="status" class="form-label small mb-1">Status</label>
+      <select id="status" class="form-select form-select-sm" [(ngModel)]="status" (ngModelChange)="load()">
+        <option value="">All</option>
+        <option value="NEW">New</option>
+        <option value="INVESTIGATING">Investigating</option>
+        <option value="DISPOSED">Disposed</option>
+      </select>
+    </div>
+    <div class="ms-auto">
+      <button class="btn btn-outline-secondary btn-sm" (click)="load()" [disabled]="loading()">
+        <i class="bi bi-arrow-clockwise"></i> Refresh
+      </button>
+    </div>
+  </div>
+</div>
+
+@if (loading()) {
+  <p class="text-secondary">Loading cases…</p>
+} @else if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+} @else {
+  <div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Case</th>
+            <th>Alert</th>
+            <th>Status</th>
+            <th>Disposition</th>
+            <th>Assigned</th>
+            <th>Created</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (c of items(); track c.id) {
+            <tr>
+              <td class="fw-bold">#{{ c.id }}</td>
+              <td><a [routerLink]="['/alerts', c.alertId]">#{{ c.alertId }}</a></td>
+              <td><span class="badge" [class]="statBadge(c.status)">{{ label(c.status) }}</span></td>
+              <td>
+                @if (c.disposition) {
+                  <span class="badge" [class]="dispBadge(c.disposition)">{{ label(c.disposition) }}</span>
+                } @else {
+                  <span class="text-secondary">—</span>
+                }
+              </td>
+              <td>{{ c.assignedTo || '—' }}</td>
+              <td class="text-secondary">{{ c.createdAt | date: 'short' }}</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-primary" [routerLink]="['/cases', c.id]">Open</a>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="text-center text-secondary py-4">No cases yet.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}

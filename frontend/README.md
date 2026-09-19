@@ -1,59 +1,49 @@
-# Frontend
+# Sentinel AML — Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.1.8.
+Angular 22 analyst dashboard for the Sentinel AML transaction monitoring system. Talks to the Spring Boot API over REST/JSON.
 
-## Development server
+## Stack
 
-To start a local development server, run:
+- Angular 22 (standalone components, signals, lazy-loaded routes)
+- Bootstrap 5.3 + Bootstrap Icons (via CDN in `index.html`) — no custom CSS
+- JWT auth with an HTTP interceptor and role-based route guards
 
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Run
 
 ```bash
-ng generate component component-name
+npm install
+npm start        # http://localhost:4200
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Expects the backend at `http://localhost:8080/api/v1`. Change it in `src/environments/environment.ts` (`apiBaseUrl`).
 
 ```bash
-ng generate --help
+npm run build    # production build -> dist/frontend
+npm test         # unit tests
 ```
 
-## Building
+## Features
 
-To build the project run:
+- **Login** — JWT sign-in (demo: `analyst / analyst123`, `admin / admin123`)
+- **Dashboard** — alert stat cards + severity/rule breakdown
+- **Alerts** — queue with filters, sort, pagination, PII masked; detail view with evidence timeline and "create case"
+- **Cases** — list + detail with a disposition form (reason required)
+- **Admin** (ADMIN role) — rule threshold config + immutable audit trail
 
-```bash
-ng build
+## Structure
+
+```
+src/app/
+  core/        services, models, guards, interceptor, helpers
+  shell/       app layout (sidebar nav + logout)
+  features/    login, dashboard, alerts, cases, admin
+  app.routes.ts
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Conventions
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+- Components use `x.component.ts` + `x.component.html` (templates in separate files).
+- Services in `core/` as `x.service.ts`; endpoints built from `environment.apiBaseUrl`.
+- Styling is Bootstrap classes only; the brand theme is set by overriding Bootstrap `--bs-*` variables in `index.html`.
+- See `.kiro/steering/frontend-conventions.md` for the full ruleset.
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

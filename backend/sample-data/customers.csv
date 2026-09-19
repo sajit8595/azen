@@ -1,0 +1,6 @@
+customer_id,first_name,last_name,gender,date_of_birth,email,phone_number,city,state,country,occupation,annual_income,customer_segment,kyc_status,risk_rating,is_politically_exposed,customer_since
+CUST_00001,Krishna,Sharma,M,1985-05-26,krishna.sharma31@gmail.com,+91-6939042955,Gurugram,Haryana,IN,Engineer,355047.0,PREMIUM,VERIFIED,MEDIUM,0,2016-08-26
+CUST_00002,Anika,Fernandes,F,2008-08-31,anika.fernandes907@outlook.com,+91-8479708607,Gurugram,Haryana,IN,Student,101869.0,RETAIL,VERIFIED,LOW,0,2020-06-15
+CUST_00003,Rahul,Mehta,M,1979-02-14,rahul.mehta@gmail.com,+91-9812345678,Mumbai,Maharashtra,IN,Business Owner,1200000.0,PREMIUM,VERIFIED,HIGH,1,2014-01-10
+CUST_00004,Priya,Nair,F,1990-11-02,priya.nair@outlook.com,+91-9900112233,Bengaluru,Karnataka,IN,Consultant,890000.0,PREMIUM,VERIFIED,MEDIUM,0,2018-05-20
+CUST_00005,Imran,Khan,M,1982-07-19,imran.khan@gmail.com,+91-9765432100,Delhi,Delhi,IN,Trader,640000.0,RETAIL,VERIFIED,HIGH,0,2015-09-30

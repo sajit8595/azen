@@ -1,0 +1,112 @@
+<div class="mb-3">
+  <a routerLink="/alerts" class="text-decoration-none small"><i class="bi bi-arrow-left"></i> Back to queue</a>
+</div>
+
+@if (loading()) {
+  <p class="text-secondary">Loading alert…</p>
+} @else if (error()) {
+  <div class="alert alert-danger">{{ error() }}</div>
+} @else if (alert(); as a) {
+  <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+    <h1 class="h3 mb-0 text-primary">Alert #{{ a.id }}</h1>
+    <span class="badge fs-6" [class]="sevBadge(a.severity)">{{ a.severity }}</span>
+    <span class="badge fs-6" [class]="statBadge(a.status)">{{ label(a.status) }}</span>
+    <div class="ms-auto">
+      <button class="btn btn-primary" (click)="createCase()" [disabled]="creatingCase()">
+        <i class="bi bi-folder-plus"></i>
+        {{ creatingCase() ? 'Creating…' : 'Create Case' }}
+      </button>
+    </div>
+  </div>
+
+  @if (caseError()) {
+    <div class="alert alert-danger">{{ caseError() }}</div>
+  }
+
+  <div class="row g-3 mb-3">
+    <div class="col-12 col-lg-8">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h2 class="h6 mb-0">{{ a.ruleName }}</h2>
+            <span class="font-monospace text-secondary small">{{ a.ruleCode }}</span>
+          </div>
+          <p class="mb-3">{{ a.explanation }}</p>
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-secondary small">Risk score</span>
+            <div class="progress flex-grow-1" role="progressbar" style="max-width: 300px">
+              <div class="progress-bar" [class]="sevBadge(a.severity)" [style.width.%]="a.riskScore"></div>
+            </div>
+            <span class="fw-bold">{{ a.riskScore }}/100</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-4">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h6 mb-3">Subject</h2>
+          <dl class="row mb-0 small">
+            <dt class="col-5 text-secondary">Customer</dt>
+            <dd class="col-7">
+              <a [routerLink]="['/customers', a.customerId]">{{ a.customerId }}</a>
+            </dd>
+            <dt class="col-5 text-secondary">Account</dt>
+            <dd class="col-7">#{{ a.accountId }}</dd>
+            <dt class="col-5 text-secondary">Created</dt>
+            <dd class="col-7">{{ a.createdAt | date: 'medium' }}</dd>
+            <dt class="col-5 text-secondary">Evidence</dt>
+            <dd class="col-7">{{ a.evidenceTxnIds.length }} transaction(s)</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body pb-0">
+      <h2 class="h6 mb-0">Transaction Timeline</h2>
+      <p class="text-secondary small">Evidence transactions highlighted</p>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Time</th>
+            <th>Direction</th>
+            <th class="text-end">Amount (INR)</th>
+            <th>Counterparty</th>
+            <th>Country</th>
+            <th>Channel</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of timeline(); track t.id) {
+            <tr [class.table-warning]="isEvidence(t.id)">
+              <td>
+                @if (isEvidence(t.id)) {
+                  <i class="bi bi-flag-fill text-warning" title="Evidence"></i>
+                }
+              </td>
+              <td class="text-secondary">{{ t.txnTimestamp | date: 'short' }}</td>
+              <td>
+                <span class="badge" [class]="t.direction === 'CREDIT' ? 'text-bg-success' : 'text-bg-secondary'">
+                  {{ t.direction }}
+                </span>
+              </td>
+              <td class="text-end font-monospace">₹{{ t.amountInr | number: '1.2-2' }}</td>
+              <td>{{ t.counterpartyName || '—' }}</td>
+              <td>{{ t.counterpartyCountry || '—' }}</td>
+              <td class="text-secondary">{{ t.channel || '—' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="text-center text-secondary py-4">No transactions to display.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+}
